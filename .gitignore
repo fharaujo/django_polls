@@ -2,5 +2,5 @@ __pycach__/
 *.py[cod]
 
 *.sqlit3
-.django_polls
-.project/.env
+.env
+.venv
