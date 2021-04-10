@@ -1,4 +1,7 @@
+import datetime
 from django.db import models
+
+from django.utils import timezone
 
 # Create your models here.
 class QuestionModel(models.Model):
@@ -11,12 +14,23 @@ class QuestionModel(models.Model):
         verbose_name_plural = 'Questões'
         ordering = ['id']
     
+    def publicado_recente(self):
+        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
     
     def __str__(self):
-        self.question_text
+        return self.question_text
     
 
 class ChoiceModel(models.Model):
     question = models.ForeignKey(QuestionModel, on_delete=models.CASCADE)
-    choice_text = models.CharField(verbose_name='Questão', max_length=200)
+    choice_text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
+
+
+    class Meta:
+        verbose_name = 'Escolha'
+        verbose_name_plural = 'Escolhas'
+        ordering = ['id']
+    
+    def __str__(self):
+        return self.choice_text
