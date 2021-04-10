@@ -1,6 +1,0 @@
-__pycach__/
-*.py[cod]
-
-*.sqlit3
-.env
-.venv
