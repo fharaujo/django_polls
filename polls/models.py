@@ -14,7 +14,8 @@ class QuestionModel(models.Model):
         verbose_name_plural = 'Questões'
     
     def publicado_recente(self):
-        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+        now = timezone.now()
+        return now - datetime.timedelta(days=1) <= self.pub_date <= now
     
     def __str__(self):
         return self.question_text

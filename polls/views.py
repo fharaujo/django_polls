@@ -2,17 +2,33 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
+from django.utils import timezone
+from django.views import generic
 from .models import QuestionModel, ChoiceModel
 
 
-def index(request):
-    questions_list = QuestionModel.objects.order_by('-pub_date')[:5]
-    context = {'questions_list': questions_list}
-    return render(request, 'index.html', context)
+class IndexView(generic.ListView):
+    template_name = 'index.html'
+    context_object_name = 'questions_list'
+   
+    def get_queryset(self):
+        return QuestionModel.objects.filter(
+            pub_date__lte=timezone.now()
+            ).order_by('-pub_date')[:5]
+         
 
-def detail(request, question_id):
-    question = get_object_or_404(QuestionModel, id=question_id)
-    return render(request, 'detail.html', {'question': question})
+
+class DetailView(generic.DetailView):
+    model = QuestionModel
+    template_name = 'detail.html'
+    context_object_name = 'question'
+    
+
+
+class ResultsView(generic.DetailView):
+    model = QuestionModel
+    template_name = 'results.html'
+    context_object_name = 'question'
 
 
 def vote(request, question_id):
@@ -33,7 +49,3 @@ def vote(request, question_id):
         # user hits the Back button.
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
 
-
-def results(request, question_id):
-    question = get_object_or_404(QuestionModel, pk=question_id)
-    return render(request, 'results.html', {'question': question})
