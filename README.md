@@ -1,1 +1,1 @@
-# Following tutorial start Django Official
+# Following the official django tutorial
